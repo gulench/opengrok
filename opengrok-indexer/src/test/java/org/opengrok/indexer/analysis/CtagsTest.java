@@ -95,7 +95,18 @@ public class CtagsTest {
     @Test
     public void testDoCtags() throws Exception {
      Definitions result = getDefs("bug16070/arguments.c");
-     assertEquals(13, result.numberOfSymbols());     
+     assertEquals(13, result.numberOfSymbols());
+    }
+
+    /**
+     * Test for Visual Basic (VB).
+     */
+    @Test
+    public void testDoCtagsVisualBasic() throws Exception {
+        Definitions result = getDefs("vb/sample.cls");
+
+        assertEquals(24, result.numberOfSymbols());
+        assertEquals(26, result.getTags().size());
     }
 
     /**

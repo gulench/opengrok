@@ -174,6 +174,8 @@ public class Ctags implements Resettable {
 
         addPowerShellSupport(command);
 
+        addVisualBasicSupport(command);
+
         //PLEASE add new languages ONLY with POSIX syntax (see above wiki link)
 
         /* Add extra command line options for ctags. */
@@ -333,6 +335,24 @@ public class Ctags implements Resettable {
         command.add("--regex-scala=/^[[:space:]]*((abstract|final|sealed|implicit|lazy)[[:space:]]*)*val[[:space:]]+([a-zA-Z0-9_]+)/\\3/l,constants/");
         command.add("--regex-scala=/^[[:space:]]*((abstract|final|sealed|implicit|lazy)[[:space:]]*)*var[[:space:]]+([a-zA-Z0-9_]+)/\\3/v,variables/");
         command.add("--regex-scala=/^[[:space:]]*package[[:space:]]+([a-zA-Z0-9_.]+)/\\1/p,packages/");
+    }
+
+    private void addVisualBasicSupport(List<String> command) {
+        command.add("--langdef=vb");
+        command.add("--langmap=vb:.bas.cls.ctl.frm.vbs");
+
+        command.add("--regex-vb=/^[ \\t]*Attribute[ \\t]+VB_Name[ \\t]+=[ \\t]+\"([a-zA-Z0-9_]+)\"[ \\t]*/\\1/c,classes/i{scope=set}");
+        command.add("--regex-vb=/^[ \\t]*(Public|Private|\\b)[ \\t]*Sub[ \\t]+([a-zA-Z0-9_]+)/\\2/s,subroutines/i{scope=ref}");
+        command.add("--regex-vb=/^[ \\t]*(Public|Private|\\b)[ \\t]*Function[ \\t]+([a-zA-Z0-9_]+)/\\2/f,functions/i{scope=ref}");
+        command.add("--regex-vb=/^[ \\t]*(Public|Private|\\b)[ \\t]*Event[ \\t]+([a-zA-Z0-9_]+)/\\2/E,events/i{scope=ref}");
+        command.add("--regex-vb=/^[ \\t]*(Public|Private)[ \\t]+([a-zA-Z0-9_]+)[ \\t]+As[ \\t]+/\\2/v,variables/i{scope=ref}");
+        command.add("--regex-vb=/^[ \\t]*(Global|Public|Private|\\b)[ \\t]*Const[ \\t]+([a-zA-Z0-9_]+)[ \\t]+(As|=)[ \\t]+/\\2/C,constants/i{scope=ref}");
+        command.add("--regex-vb=/^[ \\t]*(Public|\\b)[ \\t]*Property[ \\t]*(Get|Let|Set)[ \\t]+([a-zA-Z0-9_]+)/\\3/p,properties/i{scope=ref}");
+        command.add("--regex-vb=/^[ \\t]*(Public|Private|\\b)[ \\t]*Enum[ \\t]+([a-zA-Z0-9_]+)/\\2/e,enum/i{scope=ref}");
+        command.add("--regex-vb=/^[ \\t]*([a-zA-Z0-9_]+)(:$|:[ \ta-zA-Z0-9_']+).*/\\1/l,label/i{scope=ref}");
+        command.add("--recurse");
+        command.add("--exclude=\"bin\"");
+        command.add("--exclude=\"obj\"");
     }
 
     public Definitions doCtags(String file) throws IOException,
